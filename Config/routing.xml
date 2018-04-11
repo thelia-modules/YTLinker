@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+    <!-- ******************************* Root link to ytlinkerlist template ******************************* -->
+
+    <route id="ytlinker.list" path="/admin/YTLinker">
+        <default key="_controller">YTLinker\Controller\YTLinkerController::viewAction</default>
+    </route>
+
+    <!-- ******************************* Root link to update management ******************************* -->
+
+    <!-- ***** Default page of management update for a ytlinker-->
+    <route id="ytlinker.update" path="/admin/YTLinker/update/{ytlinkerId}" methods="get">
+        <default key="_controller">YTLinker\Controller\YTLinkerController::updateAction</default>
+        <requirement key="ytlinkerID">\d+</requirement>
+    </route>
+    
+    <!-- ***** Root to function which create and save a new ytlinker-->
+    <route id="ytlinker.create.createYTLinker" path="/admin/YTLinker/create">
+        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::createYTLinker</default>
+    </route>
+
+    <!-- ***** Root to function which save the ytlinker-->
+    <route id="ytlinker.update.saveYTLinker" path="/admin/YTLinker/save">
+        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::saveYTLinker</default>
+    </route>
+
+    <!-- ***** Root to function which delete a ytlinker from the list-->
+    <route id="admin.delete.ytlinker" path="/admin/YTLinker/delete/{ytlinker_ID}">
+        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::deleteYTLinker</default>
+        <requirement key="ytlinkerID">\d+</requirement>
+    </route>
+
+</routes>

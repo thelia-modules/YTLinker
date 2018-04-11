@@ -1,0 +1,98 @@
+{extends file="admin-layout.tpl"}
+{block name="no-return-functions"}
+{$admin_current_location = 'tools'}
+{/block}
+
+{block name="check-resource"}admin.ytlinker{/block}
+{block name="check-access"}view{/block}
+
+{block name="page-title"}{intl l='Edit a Youtube Link'}{/block}
+{block name="after-bootstrap-css"}
+
+{stylesheets source="YTLinker" file="assets/style/ytlinker-image.css"}
+<link href="{$asset_url}" rel="stylesheet" type="text/css" />
+{/stylesheets}
+
+{/block}
+
+{block name="main-content"}
+
+{loop name="ytlinker_list" type="ytlinker_list" id=$ytlinker_id limit="1" visible="*"}
+<ul class="breadcrumb">
+    <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
+    <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
+    <li><a href="{url path='/admin/YTLinker'}">{intl l="YTLinker"}</a></li>
+    <li><a href="{url path='/admin/YTLinker/Update/%ytlinker' ytlinker=$id }">{intl l="Youtube link edit :"} {$title}</a></li>
+</ul>
+
+<div class="col-md-12 general-block-decorator">
+    <div class="row">
+        <div class="col-md-7 title">
+            Edit YT Link #{$id} : {$title} </div>
+        <div class="col-md-5 actions">
+        </div>
+    </div>
+    {if $message != ""}
+    <div class="row">
+        <div class="alert-block">
+            <div class="col-md-12">
+                <div class="alert alert-warning" role="alert">
+                    {$message}
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+    <div class="row">
+        <div class="tab-content">
+            <div class="tab-pane active" id="general">
+
+                <div class="form-container">
+                    <div class="row">
+                        {form name="admin.ytlinker.update"}
+                        <form method="post" action="{url path='/admin/YTLinker/save'}" >
+                            {form_hidden_fields form=$form}
+                            {render_form_field form=$form field="success_url" value="{url path='/admin/YTLinker/update/%ytlinker_id' ytlinker_id = $id}"}
+
+                            {include
+                            file = "includes/inner-form-toolbar.html"
+                            hide_submit_buttons = true
+                            page_url  = {$pageUrl}
+                            close_url = {$closeUrl}
+                            current_tab = "general"
+                            }
+
+                            <div class="row">
+                                <div class="col-md-6">
+
+                                    {render_form_field field="ytlinker_id" value=$id}
+                                    {render_form_field field="ytlinker_title" value=$title}
+                                    {render_form_field field="ytlinker_link" value=$link}
+                                    {render_form_field field="ytlinker_description" extra_class="wysiwyg" value=$description}
+
+                                </div>
+                            </div>
+                            <div class="row" style="margin: 0;">
+                                <div class="row inner-toolbar">
+
+                                    <div class="col-md-12 inner-actions text-right">
+
+                                        {form_field form=$form field='save_mode'}
+                                           <button type="{$type}" value="stay" name="{$name}" class="form-submit-button btn btn-sm btn-default btn-success" title="{intl l='Save'}" id="{$label_attr.for}"> {intl l='Save'} <span class="glyphicon glyphicon-ok"></span></button>
+                                        {/form_field}
+
+                                        <a onclick="location.href='../../YTLinker'" class="page-close-button btn btn-sm btn-default" id="close">{intl l='Close'}<span class="glyphicon glyphicon-remove"></span></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        {/form}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/loop}
+
+{/block}
