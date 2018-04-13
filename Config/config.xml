@@ -27,9 +27,6 @@
         </hook>
         <hook id="ytlinker.superhook" class="YTLinker\Hook\MySuperHook">
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back"/>
-            <!--
-            <tag name="hook.event_listener" event="tools.col1-bottom" type="back"/>
-            !-->
         </hook>
     </hooks>
 </config>

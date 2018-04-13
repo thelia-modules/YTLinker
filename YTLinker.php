@@ -12,11 +12,26 @@
 
 namespace YTLinker;
 
+use Symfony\Component\Finder\Finder;
+use Propel\Runtime\Connection\ConnectionInterface;
+use Thelia\Install\Database;
+use Thelia\Model\Resource;
+use Thelia\Model\ResourceQuery;
 use Thelia\Module\BaseModule;
+use YTLinker\Model\YtlinkerQuery;
 
 class YTLinker extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'ytlinker';
 
+    public function postActivation(ConnectionInterface $con = null)
+    {
+        try {
+            YtlinkerQuery::create()->findOne();
+        } catch (\Exception $e) {
+            $database = new Database($con);
+            $database->insertSql(null, [__DIR__ . '/Config/thelia.sql']);
+        }
+    }
 }
