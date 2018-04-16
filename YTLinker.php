@@ -19,11 +19,14 @@ use Thelia\Model\Resource;
 use Thelia\Model\ResourceQuery;
 use Thelia\Module\BaseModule;
 use YTLinker\Model\YtlinkerQuery;
+//use YTLinker\Model\Base\Ytlinker;
+use YTLinker\Model\Base\YtlinkerI18n;
 
 class YTLinker extends BaseModule
 {
     /** @var string */
     const DOMAIN_NAME = 'ytlinker';
+    const ROUTER = 'router.selection';
 
     public function postActivation(ConnectionInterface $con = null)
     {

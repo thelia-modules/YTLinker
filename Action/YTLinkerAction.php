@@ -12,25 +12,73 @@ use Propel\Runtime\Propel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thelia\Action\BaseAction;
+use Thelia\Core\Event\UpdateSeoEvent;
 use YTLinker\Event\YTLinkerEvent;
 use YTLinker\Event\YTLinkerEvents;
+//use YTLinker\Model\Base\YtlinkerI18n;
 use YTLinker\Model\Map\YtlinkerTableMap;
+use YTLinker\Model\Map\YtlinkerI18nTableMap;
 use YTLinker\Model\Ytlinker;
+use YTLinker\Model\YtlinkerI18n;
 use YTLinker\Model\YtlinkerQuery;
 use YTLinker\Form\YTLinkerUpdateForm;
 
 class YTLinkerAction extends BaseAction implements EventSubscriberInterface
 {
+//    public function create(YTLinkerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     public function create(YTLinkerEvent $event)
     {
+        /*
+        $ytlinker = new Ytlinker();
+        $ytlinker->setDispatcher($dispatcher);
+
+        $ytlinker
+            ->setLink($event->getLink())
+            ->setDescription($event->getDescription())
+            ->setLocale($event->getLocale())
+            ->setTitle($event->getTitle())
+            ->save();
+
+        $event->setYTLinker($ytlinker);
+        */
         $this->createOrUpdate($event, new YTLinker());
     }
 
+//    public function update(YTLinkerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     public function update(YTLinkerEvent $event)
     {
-        $model = $this->getYTLinker($event);
 
-        $this->createOrUpdate($event, $model);
+        /*
+        if (null !== $ytlinker = YtlinkerQuery::create()->findPk($event->getId())) {
+            $ytlinker->setDispatcher($dispatcher);
+
+            $ytlinker
+                ->setLocale($event->getCurrentLocale())
+                ->setTitle($event->getTitle())
+                ->setDescription($event->getDescription())
+                ->setLink($event->getLink())
+                ->save();;
+
+            $event->setYTLinker($ytlinker);
+        }
+
+        */
+            $model = $this->getYTLinker($event);
+
+            $this->createOrUpdate($event, $model);
+    }
+
+    /**
+     * Change YTLinker SEO
+     *
+     * @param UpdateSeoEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
+     * @return Object
+     */
+    public function updateSeo(UpdateSeoEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    {
+        return $this->genericUpdateSeo(YtlinkerQuery::create(), $event, $dispatcher);
     }
 
     public function delete(YTLinkerEvent $event)
@@ -52,27 +100,27 @@ class YTLinkerAction extends BaseAction implements EventSubscriberInterface
         return $model;
     }
 
-    protected function createOrUpdate(YTLinkerEvent $event, YTLinker $model)
+    protected function createOrUpdate($event, YTLinker $model)
     {
-        $connect = Propel::getConnection(YTLinkerTableMap::DATABASE_NAME);
+        $connect = Propel::getConnection(YtlinkerI18nTableMap::DATABASE_NAME);
         $connect->beginTransaction();
         try {
-            if ($locale = $event->getLocale() !== null) {
+            if (null !== $locale = $event->getCurrentLocale()) {
                 $model->setLocale($locale);
             }
-            if ($id = $event->getId() !== null) {
+            if (null !== $id = $event->getId()) {
                 $model->setId($id);
             }
-            if ($title = $event->getTitle() !== null) {
+            if (null !== $title = $event->getTitle()) {
                 $model->setTitle($title);
             }
-            if ($link = $event->getLink() !== null) {
+            if (null !== $link = $event->getLink()) {
                 $model->setLink($link);
             }
-            if ($description = $event->getDescription() !== null) {
+            if (null !== $description = $event->getDescription()) {
                 $model->setDescription($description);
             }
-            if ($position = $event->getPosition() !== null) {
+            if (null !== $position = $event->getPosition()) {
                 $model->setPosition($position);
             }
 

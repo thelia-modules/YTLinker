@@ -14,7 +14,7 @@
 
     <!-- ***** Default page of management update for a ytlinker-->
     <route id="ytlinker.update" path="/admin/YTLinker/update/{ytlinkerId}" methods="get">
-        <default key="_controller">YTLinker\Controller\YTLinkerController::updateAction</default>
+        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::updateAction</default>
         <requirement key="ytlinkerID">\d+</requirement>
     </route>
     
@@ -25,13 +25,18 @@
 
     <!-- ***** Root to function which save the ytlinker-->
     <route id="ytlinker.update.saveYTLinker" path="/admin/YTLinker/save">
-        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::saveYTLinker</default>
+        <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::processUpdateAction</default>
     </route>
 
     <!-- ***** Root to function which delete a ytlinker from the list-->
     <route id="admin.delete.ytlinker" path="/admin/YTLinker/delete/{ytlinker_ID}">
         <default key="_controller">YTLinker\Controller\YTLinkerUpdateController::deleteYTLinker</default>
         <requirement key="ytlinkerID">\d+</requirement>
+    </route>
+
+    <!-- ***** Root to function which save SEO content-->
+    <route id="admin.selection.seo.save" path="/admin/selection/seo/save">
+        <default key="_controller">Selection\Controller\SelectionUpdateController::processUpdateSeoAction</default>
     </route>
 
 </routes>

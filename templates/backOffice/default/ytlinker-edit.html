@@ -12,12 +12,10 @@
 {stylesheets source="YTLinker" file="assets/style/ytlinker-image.css"}
 <link href="{$asset_url}" rel="stylesheet" type="text/css" />
 {/stylesheets}
-
 {/block}
-
 {block name="main-content"}
 
-{loop name="ytlinker_list" type="ytlinker_list" id=$ytlinker_id limit="1" visible="*"}
+{loop name="ytlinker_list" type="ytlinker_list" limit="1" visible="*"}
 <ul class="breadcrumb">
     <li><a href="{url path='/admin/home'}">{intl l="Home"}</a></li>
     <li><a href="{url path='/admin/tools'}">{intl l="Tools"}</a></li>
@@ -28,7 +26,7 @@
 <div class="col-md-12 general-block-decorator">
     <div class="row">
         <div class="col-md-7 title">
-            Edit YT Link #{$id} : {$title} </div>
+            Edit YT Link #{$ytlinker_id} : {$ytlinker_title} </div>
         <div class="col-md-5 actions">
         </div>
     </div>
@@ -52,7 +50,7 @@
                         {form name="admin.ytlinker.update"}
                         <form method="post" action="{url path='/admin/YTLinker/save'}" >
                             {form_hidden_fields form=$form}
-                            {render_form_field form=$form field="success_url" value="{url path='/admin/YTLinker/update/%ytlinker_id' ytlinker_id = $id}"}
+                            {render_form_field form=$form field="success_url" value="{url path='/admin/YTLinker/update/%ytlinker_id' ytlinker_id = $ytlinker_id}"}
 
                             {include
                             file = "includes/inner-form-toolbar.html"
@@ -65,10 +63,10 @@
                             <div class="row">
                                 <div class="col-md-6">
 
-                                    {render_form_field field="ytlinker_id" value=$id}
-                                    {render_form_field field="ytlinker_title" value=$title}
-                                    {render_form_field field="ytlinker_link" value=$link}
-                                    {render_form_field field="ytlinker_description" extra_class="wysiwyg" value=$description}
+                                    {render_form_field field="ytlinker_id"}
+                                    {render_form_field field="ytlinker_title"}
+                                    {render_form_field field="ytlinker_link"}
+                                    {render_form_field field="ytlinker_description" extra_class="wysiwyg"}
 
                                 </div>
                             </div>

@@ -101,6 +101,17 @@ class YTLinkerEvent extends ActionEvent
         return $this;
     }
 
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale;
+    }
+
+    public function setCurrentLocale($currentLocale)
+    {
+        $this->currentLocale = $currentLocale;
+        return $this;
+    }
+
     /*----------------------------- YTLinker object Parts*/
     public function __construct(YTLinker $ytlinker = null)
     {

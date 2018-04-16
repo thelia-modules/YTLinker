@@ -18,9 +18,11 @@ use YTLinker\Model\YtlinkerQuery;
 use YTLinker\Utilities\YTLinkerUtilities;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Thelia\Controller\Admin\AbstractSeoCrudController;
+use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Tools\URL;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Thelia\Form\BaseForm;
 
 
 class YTLinkerUpdateController extends AbstractSeoCrudController
@@ -33,7 +35,6 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
      * @return \Symfony\Component\HttpFoundation\Response|\Thelia\Core\HttpFoundation\Response
      * @throws \Propel\Runtime\Exception\PropelException
      */
-
     public function saveYTLinker()
     {
         $form = new YTLinkerUpdateForm($this->getRequest());
@@ -58,6 +59,8 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
             ->filterByLocale($lang->getLocale())
             ->findOne();
 
+        var_dump($lang->getLocale());
+
         $aYTLinker
             ->setTitle($ytlinkerTitle)
             ->setLink($ytlinkerLink)
@@ -71,7 +74,8 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
             $message = ['message' => $ytlinkerLink . ' is not a valid Youtube link. "' . $ytlinkerTitle . '" has been modified with the full link you entered.'];
         }
 
-        return $this->render("ytlinkerlist", $message);
+        //return $this->render("ytlinkerlist", $message);
+        return $this->generateRedirectFromRoute('ytlinker.update', [], ['ytlinkerId' => $ytlinkerID], null);
     }
 
     /***
@@ -190,6 +194,12 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         return $this->createForm('admin.ytlinker.update', 'form', $data);
     }
 
+
+    /**
+     * Hydrate the update form for this object, before passing it to the update template
+     *
+     * @return BaseForm
+     */
     protected function hydrateObjectForm($object)
     {
         $this->hydrateSeoForm($object);
@@ -205,31 +215,58 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
             'current_id'            => $object->getId(),
         );
 
+//        return $this->createForm('admin.ytlinker.update', 'form', $data);
         return $this->getUpdateForm($data);
     }
 
+    /**
+     * Creates the creation event with the provided form data
+     *
+     * @param array $formData
+     * @return YTLinkerEvent
+     */
     protected function getCreationEvent($formData)
     {
         $event = new YTLinkerEvent();
 
-        $event->setId($formData['ytlinker_id']);
-        $event->setTitle($formData['ytlinker_title']);
-        $event->setLink($formData['ytlinker_link']);
-        $event->setDescription($formData['ytlinker_description']);
+        $event
+            ->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale())
+            ->setId($formData['ytlinker_id'])
+            ->setTitle($formData['ytlinker_title'])
+            ->setLink($formData['ytlinker_link'])
+            ->setDescription($formData['ytlinker_description']);
 
         return $event;
     }
 
+    /**
+     * Creates the update event with the provided form data
+     *
+     * @param array $formData
+     * @return YTLinkerEvent
+     */
     protected function getUpdateEvent($formData)
     {
         $ytlinker = YTLinkerQuery::create()->findPk($formData['ytlinker_id']);
         $event = new YTLinkerEvent($ytlinker);
 
+        $event
+//            ->setLocale($formData['ytlinker_locale'])
+            ->setId($formData['ytlinker_id'])
+            ->setTitle($formData['ytlinker_title'])
+            ->setLink($formData['ytlinker_link'])
+            ->setDescription($formData['ytlinker_description'])
+            ->setCurrentLocale($this->getCurrentEditionLocale())
+            ->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
+
+        /*
         $event->setId($formData['ytlinker_id']);
         $event->setTitle($formData['ytlinker_title']);
         $event->setLink($formData['ytlinker_link']);
         $event->setDescription($formData['ytlinker_description']);
         $event->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
+        */
+
         return $event;
     }
 
@@ -242,16 +279,32 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         return $event;
     }
 
+    /**
+     * Return true if the event contains the object, e.g. the action has updated the object in the event.
+     *
+     * @param \YTLinker\Event\YTLinkerEvent $event
+     * @return bool
+     */
     protected function eventContainsObject($event)
     {
         return $event->hasYTLinker();
     }
 
+
+    /**
+     * Get the created object from an event.
+     *
+     * @param \YTLinker\Event\YTLinkerEvent $event
+     * @return null|\YTLinker\Model\Ytlinker
+     */
     protected function getObjectFromEvent($event)
     {
-        return $event->getYTLinker();
+        return $event->hasYTLinker() ? $event->getYTLinker() : null;
     }
 
+    /**
+     * Load an existing object from the database
+     */
     protected function getExistingObject()
     {
         $ytlinker = YTLinkerQuery::create()
@@ -264,16 +317,31 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         return $ytlinker;
     }
 
+    /**
+     * Returns the object label form the object event (name, title, etc.)
+     *
+     * @param YTLinker $object
+     * @return string
+     */
     protected function getObjectLabel($object)
     {
-        return '';
+        return $object->getTitle();
     }
 
+    /**
+     * Returns the object ID from the object
+     *
+     * @param YTLinker $object
+     * @return int
+     */
     protected function getObjectId($object)
     {
         return $object->getId();
     }
 
+    /**
+     * Render the main list template
+     */
     protected function renderListTemplate($currentOrder)
     {
         $this->getParser()
@@ -282,6 +350,9 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         return $this->render('ytlinkerlist');
     }
 
+    /**
+     * Render the edition template
+     */
     protected function renderEditionTemplate()
     {
         $this->getParserContext()
@@ -293,9 +364,12 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         return $this->render('ytlinker-edit');
     }
 
+
     protected function redirectToEditionTemplate()
     {
         $id = $this->getRequest()->get('ytlinker_id');
+
+        //var_dump($id);
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
@@ -304,6 +378,9 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         );
     }
 
+    /**
+     * Redirect to the list template
+     */
     protected function redirectToListTemplate()
     {
         return new RedirectResponse(

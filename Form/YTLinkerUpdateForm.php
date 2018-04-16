@@ -8,7 +8,6 @@
 
 namespace YTLinker\Form;
 
-
 use Thelia\Form\BaseForm;
 use Thelia\Core\Translation\Translator;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -79,7 +78,7 @@ class YTLinkerUpdateForm extends BaseForm
                 SubmitType::class,
                 array(
                     'attr'          => array('class' => 'save_and_close'),
-                    'label'         =>'save_and_close'
+                    'label'         =>'save_and_close',
                 )
             );
     }

@@ -34,6 +34,9 @@ CREATE TABLE `ytlinker_i18n`
     `title` VARCHAR(255) NOT NULL,
     `link` TEXT NOT NULL,
     `description` LONGTEXT,
+    `meta_title` VARCHAR(255),
+    `meta_description` TEXT,
+    `meta_keywords` TEXT,
     PRIMARY KEY (`id`,`locale`),
     CONSTRAINT `ytlinker_i18n_FK_1`
         FOREIGN KEY (`id`)

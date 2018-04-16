@@ -55,7 +55,7 @@
                             </tr>
                             </thead>
 
-                            {loop name="ytlinker" type="ytlinker_list" lang=$lang_id}
+                            {loop name="ytlinker" type="ytlinker_list" lang=$lang_id visible="*" backend_context="1" order=$order}
                             <tbody>
                             <tr>
                                 <td class="text-center">{$ID}</td>
@@ -65,7 +65,7 @@
                                     <a title="{intl l='Change this ytlinker'}" href="{url path="admin/YTLinker/update/%ytlinkerId" ytlinkerId=$ID}">{$TITLE}</a>
                                     {/loop}
                                     {elseloop rel="can_change"}
-                                    {$TITLE}
+                                        {$TITLE}
                                     {/elseloop}
                                 </td>
 
@@ -108,7 +108,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3>{intl l='Add a new Youtube video ID ! Enjoy !'}</h3>
+                    <h3>{intl l='Add a new Youtube video ID'}</h3>
                 </div>
                 <div class="modal-body align-center">
                     <div class="js-form-create">

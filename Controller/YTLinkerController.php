@@ -36,6 +36,8 @@ class YTLinkerController extends BaseAdminController
                 $title          = $ytlinker->getTitle();
                 $link           = $ytlinker->getLink();
                 $description    = $ytlinker->getDescription();
+                $locale = $this->getRequest()->getSession()->get('thelia.current.lang')->getLocale();
+
 
                 $response = [
                     'id'            => $id,
@@ -43,6 +45,14 @@ class YTLinkerController extends BaseAdminController
                     'link'          => $link,
                     'description'   => $description,
                 ];
+                $YTLinkerSeo = new YTLinkerUpdateController();
+                $YTLinkerSeo->updateAction(
+                    $id,
+                    $locale = $this->getRequest()
+                        ->getSession()
+                        ->get('thelia.current.lang')
+                        ->getLocale()
+                );
             }
         } catch (\Exception $exc) {
             throw $exc;

@@ -85,6 +85,24 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
     protected $description;
 
     /**
+     * The value for the meta_title field.
+     * @var        string
+     */
+    protected $meta_title;
+
+    /**
+     * The value for the meta_description field.
+     * @var        string
+     */
+    protected $meta_description;
+
+    /**
+     * The value for the meta_keywords field.
+     * @var        string
+     */
+    protected $meta_keywords;
+
+    /**
      * @var        Ytlinker
      */
     protected $aYtlinker;
@@ -424,6 +442,39 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
     }
 
     /**
+     * Get the [meta_title] column value.
+     *
+     * @return   string
+     */
+    public function getMetaTitle()
+    {
+
+        return $this->meta_title;
+    }
+
+    /**
+     * Get the [meta_description] column value.
+     *
+     * @return   string
+     */
+    public function getMetaDescription()
+    {
+
+        return $this->meta_description;
+    }
+
+    /**
+     * Get the [meta_keywords] column value.
+     *
+     * @return   string
+     */
+    public function getMetaKeywords()
+    {
+
+        return $this->meta_keywords;
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param      int $v new value
@@ -533,6 +584,69 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
     } // setDescription()
 
     /**
+     * Set the value of [meta_title] column.
+     *
+     * @param      string $v new value
+     * @return   \YTLinker\Model\YtlinkerI18n The current object (for fluent API support)
+     */
+    public function setMetaTitle($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_title !== $v) {
+            $this->meta_title = $v;
+            $this->modifiedColumns[YtlinkerI18nTableMap::META_TITLE] = true;
+        }
+
+
+        return $this;
+    } // setMetaTitle()
+
+    /**
+     * Set the value of [meta_description] column.
+     *
+     * @param      string $v new value
+     * @return   \YTLinker\Model\YtlinkerI18n The current object (for fluent API support)
+     */
+    public function setMetaDescription($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_description !== $v) {
+            $this->meta_description = $v;
+            $this->modifiedColumns[YtlinkerI18nTableMap::META_DESCRIPTION] = true;
+        }
+
+
+        return $this;
+    } // setMetaDescription()
+
+    /**
+     * Set the value of [meta_keywords] column.
+     *
+     * @param      string $v new value
+     * @return   \YTLinker\Model\YtlinkerI18n The current object (for fluent API support)
+     */
+    public function setMetaKeywords($v)
+    {
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->meta_keywords !== $v) {
+            $this->meta_keywords = $v;
+            $this->modifiedColumns[YtlinkerI18nTableMap::META_KEYWORDS] = true;
+        }
+
+
+        return $this;
+    } // setMetaKeywords()
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -587,6 +701,15 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : YtlinkerI18nTableMap::translateFieldName('Description', TableMap::TYPE_PHPNAME, $indexType)];
             $this->description = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : YtlinkerI18nTableMap::translateFieldName('MetaTitle', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->meta_title = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : YtlinkerI18nTableMap::translateFieldName('MetaDescription', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->meta_description = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : YtlinkerI18nTableMap::translateFieldName('MetaKeywords', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->meta_keywords = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -595,7 +718,7 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = YtlinkerI18nTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = YtlinkerI18nTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \YTLinker\Model\YtlinkerI18n object", 0, $e);
@@ -831,6 +954,15 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
         if ($this->isColumnModified(YtlinkerI18nTableMap::DESCRIPTION)) {
             $modifiedColumns[':p' . $index++]  = 'DESCRIPTION';
         }
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_TITLE)) {
+            $modifiedColumns[':p' . $index++]  = 'META_TITLE';
+        }
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_DESCRIPTION)) {
+            $modifiedColumns[':p' . $index++]  = 'META_DESCRIPTION';
+        }
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_KEYWORDS)) {
+            $modifiedColumns[':p' . $index++]  = 'META_KEYWORDS';
+        }
 
         $sql = sprintf(
             'INSERT INTO ytlinker_i18n (%s) VALUES (%s)',
@@ -856,6 +988,15 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
                         break;
                     case 'DESCRIPTION':
                         $stmt->bindValue($identifier, $this->description, PDO::PARAM_STR);
+                        break;
+                    case 'META_TITLE':
+                        $stmt->bindValue($identifier, $this->meta_title, PDO::PARAM_STR);
+                        break;
+                    case 'META_DESCRIPTION':
+                        $stmt->bindValue($identifier, $this->meta_description, PDO::PARAM_STR);
+                        break;
+                    case 'META_KEYWORDS':
+                        $stmt->bindValue($identifier, $this->meta_keywords, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -927,6 +1068,15 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
             case 4:
                 return $this->getDescription();
                 break;
+            case 5:
+                return $this->getMetaTitle();
+                break;
+            case 6:
+                return $this->getMetaDescription();
+                break;
+            case 7:
+                return $this->getMetaKeywords();
+                break;
             default:
                 return null;
                 break;
@@ -961,6 +1111,9 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
             $keys[2] => $this->getTitle(),
             $keys[3] => $this->getLink(),
             $keys[4] => $this->getDescription(),
+            $keys[5] => $this->getMetaTitle(),
+            $keys[6] => $this->getMetaDescription(),
+            $keys[7] => $this->getMetaKeywords(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1020,6 +1173,15 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
             case 4:
                 $this->setDescription($value);
                 break;
+            case 5:
+                $this->setMetaTitle($value);
+                break;
+            case 6:
+                $this->setMetaDescription($value);
+                break;
+            case 7:
+                $this->setMetaKeywords($value);
+                break;
         } // switch()
     }
 
@@ -1049,6 +1211,9 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
         if (array_key_exists($keys[2], $arr)) $this->setTitle($arr[$keys[2]]);
         if (array_key_exists($keys[3], $arr)) $this->setLink($arr[$keys[3]]);
         if (array_key_exists($keys[4], $arr)) $this->setDescription($arr[$keys[4]]);
+        if (array_key_exists($keys[5], $arr)) $this->setMetaTitle($arr[$keys[5]]);
+        if (array_key_exists($keys[6], $arr)) $this->setMetaDescription($arr[$keys[6]]);
+        if (array_key_exists($keys[7], $arr)) $this->setMetaKeywords($arr[$keys[7]]);
     }
 
     /**
@@ -1065,6 +1230,9 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
         if ($this->isColumnModified(YtlinkerI18nTableMap::TITLE)) $criteria->add(YtlinkerI18nTableMap::TITLE, $this->title);
         if ($this->isColumnModified(YtlinkerI18nTableMap::LINK)) $criteria->add(YtlinkerI18nTableMap::LINK, $this->link);
         if ($this->isColumnModified(YtlinkerI18nTableMap::DESCRIPTION)) $criteria->add(YtlinkerI18nTableMap::DESCRIPTION, $this->description);
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_TITLE)) $criteria->add(YtlinkerI18nTableMap::META_TITLE, $this->meta_title);
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_DESCRIPTION)) $criteria->add(YtlinkerI18nTableMap::META_DESCRIPTION, $this->meta_description);
+        if ($this->isColumnModified(YtlinkerI18nTableMap::META_KEYWORDS)) $criteria->add(YtlinkerI18nTableMap::META_KEYWORDS, $this->meta_keywords);
 
         return $criteria;
     }
@@ -1140,6 +1308,9 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
         $copyObj->setTitle($this->getTitle());
         $copyObj->setLink($this->getLink());
         $copyObj->setDescription($this->getDescription());
+        $copyObj->setMetaTitle($this->getMetaTitle());
+        $copyObj->setMetaDescription($this->getMetaDescription());
+        $copyObj->setMetaKeywords($this->getMetaKeywords());
         if ($makeNew) {
             $copyObj->setNew(true);
         }
@@ -1228,6 +1399,9 @@ abstract class YtlinkerI18n implements ActiveRecordInterface
         $this->title = null;
         $this->link = null;
         $this->description = null;
+        $this->meta_title = null;
+        $this->meta_description = null;
+        $this->meta_keywords = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->applyDefaultValues();

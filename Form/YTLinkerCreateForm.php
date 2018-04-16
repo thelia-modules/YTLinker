@@ -31,7 +31,7 @@ class YTLinkerCreateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                    "label" => 'Title',
+                    "label"         => 'Title',
                 )
             )
             ->add(
@@ -41,22 +41,22 @@ class YTLinkerCreateForm extends BaseForm
                     "constraints"   => array(
                         new Constraints\NotBlank()
                     ),
-                    "label" => 'Link',
+                    "label"         => 'Link',
                 )
             )
             ->add(
                 'ytlinker_description',
                 TextareaType::class,
                 array(
-                    "label" => 'Description',
+                    "label"         => 'Description',
                 )
             )
             ->add(
                 'save',
                 SubmitType::class,
                 array(
-                    'attr'      => array('class' => 'save'),
-                    'label'     => 'Save'
+                    'attr'          => array('class' => 'save'),
+                    'label'         => 'Save'
                 )
             );
 

@@ -26,12 +26,18 @@ use YTLinker\Model\Map\YtlinkerI18nTableMap;
  * @method     ChildYtlinkerI18nQuery orderByTitle($order = Criteria::ASC) Order by the title column
  * @method     ChildYtlinkerI18nQuery orderByLink($order = Criteria::ASC) Order by the link column
  * @method     ChildYtlinkerI18nQuery orderByDescription($order = Criteria::ASC) Order by the description column
+ * @method     ChildYtlinkerI18nQuery orderByMetaTitle($order = Criteria::ASC) Order by the meta_title column
+ * @method     ChildYtlinkerI18nQuery orderByMetaDescription($order = Criteria::ASC) Order by the meta_description column
+ * @method     ChildYtlinkerI18nQuery orderByMetaKeywords($order = Criteria::ASC) Order by the meta_keywords column
  *
  * @method     ChildYtlinkerI18nQuery groupById() Group by the id column
  * @method     ChildYtlinkerI18nQuery groupByLocale() Group by the locale column
  * @method     ChildYtlinkerI18nQuery groupByTitle() Group by the title column
  * @method     ChildYtlinkerI18nQuery groupByLink() Group by the link column
  * @method     ChildYtlinkerI18nQuery groupByDescription() Group by the description column
+ * @method     ChildYtlinkerI18nQuery groupByMetaTitle() Group by the meta_title column
+ * @method     ChildYtlinkerI18nQuery groupByMetaDescription() Group by the meta_description column
+ * @method     ChildYtlinkerI18nQuery groupByMetaKeywords() Group by the meta_keywords column
  *
  * @method     ChildYtlinkerI18nQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildYtlinkerI18nQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -49,12 +55,18 @@ use YTLinker\Model\Map\YtlinkerI18nTableMap;
  * @method     ChildYtlinkerI18n findOneByTitle(string $title) Return the first ChildYtlinkerI18n filtered by the title column
  * @method     ChildYtlinkerI18n findOneByLink(string $link) Return the first ChildYtlinkerI18n filtered by the link column
  * @method     ChildYtlinkerI18n findOneByDescription(string $description) Return the first ChildYtlinkerI18n filtered by the description column
+ * @method     ChildYtlinkerI18n findOneByMetaTitle(string $meta_title) Return the first ChildYtlinkerI18n filtered by the meta_title column
+ * @method     ChildYtlinkerI18n findOneByMetaDescription(string $meta_description) Return the first ChildYtlinkerI18n filtered by the meta_description column
+ * @method     ChildYtlinkerI18n findOneByMetaKeywords(string $meta_keywords) Return the first ChildYtlinkerI18n filtered by the meta_keywords column
  *
  * @method     array findById(int $id) Return ChildYtlinkerI18n objects filtered by the id column
  * @method     array findByLocale(string $locale) Return ChildYtlinkerI18n objects filtered by the locale column
  * @method     array findByTitle(string $title) Return ChildYtlinkerI18n objects filtered by the title column
  * @method     array findByLink(string $link) Return ChildYtlinkerI18n objects filtered by the link column
  * @method     array findByDescription(string $description) Return ChildYtlinkerI18n objects filtered by the description column
+ * @method     array findByMetaTitle(string $meta_title) Return ChildYtlinkerI18n objects filtered by the meta_title column
+ * @method     array findByMetaDescription(string $meta_description) Return ChildYtlinkerI18n objects filtered by the meta_description column
+ * @method     array findByMetaKeywords(string $meta_keywords) Return ChildYtlinkerI18n objects filtered by the meta_keywords column
  *
  */
 abstract class YtlinkerI18nQuery extends ModelCriteria
@@ -143,7 +155,7 @@ abstract class YtlinkerI18nQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, LOCALE, TITLE, LINK, DESCRIPTION FROM ytlinker_i18n WHERE ID = :p0 AND LOCALE = :p1';
+        $sql = 'SELECT ID, LOCALE, TITLE, LINK, DESCRIPTION, META_TITLE, META_DESCRIPTION, META_KEYWORDS FROM ytlinker_i18n WHERE ID = :p0 AND LOCALE = :p1';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key[0], PDO::PARAM_INT);
@@ -401,6 +413,93 @@ abstract class YtlinkerI18nQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(YtlinkerI18nTableMap::DESCRIPTION, $description, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_title column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaTitle('fooValue');   // WHERE meta_title = 'fooValue'
+     * $query->filterByMetaTitle('%fooValue%'); // WHERE meta_title LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaTitle The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildYtlinkerI18nQuery The current query, for fluid interface
+     */
+    public function filterByMetaTitle($metaTitle = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaTitle)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaTitle)) {
+                $metaTitle = str_replace('*', '%', $metaTitle);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(YtlinkerI18nTableMap::META_TITLE, $metaTitle, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_description column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaDescription('fooValue');   // WHERE meta_description = 'fooValue'
+     * $query->filterByMetaDescription('%fooValue%'); // WHERE meta_description LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaDescription The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildYtlinkerI18nQuery The current query, for fluid interface
+     */
+    public function filterByMetaDescription($metaDescription = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaDescription)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaDescription)) {
+                $metaDescription = str_replace('*', '%', $metaDescription);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(YtlinkerI18nTableMap::META_DESCRIPTION, $metaDescription, $comparison);
+    }
+
+    /**
+     * Filter the query on the meta_keywords column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByMetaKeywords('fooValue');   // WHERE meta_keywords = 'fooValue'
+     * $query->filterByMetaKeywords('%fooValue%'); // WHERE meta_keywords LIKE '%fooValue%'
+     * </code>
+     *
+     * @param     string $metaKeywords The value to use as filter.
+     *              Accepts wildcards (* and % trigger a LIKE)
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildYtlinkerI18nQuery The current query, for fluid interface
+     */
+    public function filterByMetaKeywords($metaKeywords = null, $comparison = null)
+    {
+        if (null === $comparison) {
+            if (is_array($metaKeywords)) {
+                $comparison = Criteria::IN;
+            } elseif (preg_match('/[\%\*]/', $metaKeywords)) {
+                $metaKeywords = str_replace('*', '%', $metaKeywords);
+                $comparison = Criteria::LIKE;
+            }
+        }
+
+        return $this->addUsingAlias(YtlinkerI18nTableMap::META_KEYWORDS, $metaKeywords, $comparison);
     }
 
     /**
