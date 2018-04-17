@@ -30,6 +30,7 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
     protected $currentRouter = "router.YTLinker";
 
     /**
+     * [Deprecated. The program now uses createOrUpdate in YTLinkerAction.php, called by processUpdateAction]
      * Save content after checking the link validity
      *
      * @return \Symfony\Component\HttpFoundation\Response|\Thelia\Core\HttpFoundation\Response
@@ -116,7 +117,6 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         try {
             $ytlinker
                 ->setCreatedAt($date->format("Y-m-d H:i:s"))
-                ->setUpdatedAt($date->format("Y-m-d H:i:s"))
                 ->setLocale($lang->getLocale())
                 ->setPosition($position)
                 ->setLink($ytlinkerLink)
@@ -251,21 +251,12 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
         $event = new YTLinkerEvent($ytlinker);
 
         $event
-//            ->setLocale($formData['ytlinker_locale'])
             ->setId($formData['ytlinker_id'])
             ->setTitle($formData['ytlinker_title'])
             ->setLink($formData['ytlinker_link'])
             ->setDescription($formData['ytlinker_description'])
             ->setCurrentLocale($this->getCurrentEditionLocale())
             ->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
-
-        /*
-        $event->setId($formData['ytlinker_id']);
-        $event->setTitle($formData['ytlinker_title']);
-        $event->setLink($formData['ytlinker_link']);
-        $event->setDescription($formData['ytlinker_description']);
-        $event->setLocale($this->getRequest()->getSession()->get('thelia.current.lang')->getLocale());
-        */
 
         return $event;
     }
@@ -367,13 +358,13 @@ class YTLinkerUpdateController extends AbstractSeoCrudController
 
     protected function redirectToEditionTemplate()
     {
+        //Not working
         $id = $this->getRequest()->get('ytlinker_id');
 
-        //var_dump($id);
-
+        var_dump($id);
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(
-                "/admin/ytlinker/update/".$id
+                "/admin/YTLinker/update/".$id
             )
         );
     }

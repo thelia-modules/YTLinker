@@ -8,7 +8,6 @@
 
 namespace YTLinker\Utilities;
 
-
 class YTLinkerUtilities
 {
 

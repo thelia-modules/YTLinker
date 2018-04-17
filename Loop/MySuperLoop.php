@@ -106,7 +106,6 @@
          }
 
          return $search;
-//         return $search->orderByPosition(Criteria::ASC);
      }
 
      /**
@@ -126,19 +125,11 @@
                  ->set("TITLE", $ytlinker->getVirtualColumn('i18n_TITLE'))
                  ->set("LINK", $ytlinker->getVirtualColumn('i18n_LINK'))
                  ->set("DESC", $ytlinker->getVirtualColumn('i18n_DESCRIPTION'))
-//                 ->set("TITLE", $ytlinker->geti18n_TITLE())
-//                 ->set("LINK", $ytlinker->geti18n_LINK())
-//                 ->set("DESC", $ytlinker->geti18n_DESCRIPTION())
-//                 ->set("TITLE", $ytlinker->getTitle())
-//                 ->set("LINK", $ytlinker->getLink())
-//                 ->set("DESC", $ytlinker->getDescription())
                  ->set("POSITION", $ytlinker->getPosition())
-                 ->set("URL", $this->getReturnUrl() ? $ytlinker->getUrl($this->locale) : null)
              ;
 
              $loopResult->addRow($loopResultRow);
          }
-
          return $loopResult;
      }
 

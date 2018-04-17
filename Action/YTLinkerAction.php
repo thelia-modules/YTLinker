@@ -15,57 +15,26 @@ use Thelia\Action\BaseAction;
 use Thelia\Core\Event\UpdateSeoEvent;
 use YTLinker\Event\YTLinkerEvent;
 use YTLinker\Event\YTLinkerEvents;
-//use YTLinker\Model\Base\YtlinkerI18n;
 use YTLinker\Model\Map\YtlinkerTableMap;
 use YTLinker\Model\Map\YtlinkerI18nTableMap;
 use YTLinker\Model\Ytlinker;
 use YTLinker\Model\YtlinkerI18n;
 use YTLinker\Model\YtlinkerQuery;
 use YTLinker\Form\YTLinkerUpdateForm;
+use YTLinker\Utilities\YTLinkerUtilities;
 
 class YTLinkerAction extends BaseAction implements EventSubscriberInterface
 {
-//    public function create(YTLinkerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     public function create(YTLinkerEvent $event)
     {
-        /*
-        $ytlinker = new Ytlinker();
-        $ytlinker->setDispatcher($dispatcher);
-
-        $ytlinker
-            ->setLink($event->getLink())
-            ->setDescription($event->getDescription())
-            ->setLocale($event->getLocale())
-            ->setTitle($event->getTitle())
-            ->save();
-
-        $event->setYTLinker($ytlinker);
-        */
         $this->createOrUpdate($event, new YTLinker());
     }
 
-//    public function update(YTLinkerEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     public function update(YTLinkerEvent $event)
     {
+        $model = $this->getYTLinker($event);
 
-        /*
-        if (null !== $ytlinker = YtlinkerQuery::create()->findPk($event->getId())) {
-            $ytlinker->setDispatcher($dispatcher);
-
-            $ytlinker
-                ->setLocale($event->getCurrentLocale())
-                ->setTitle($event->getTitle())
-                ->setDescription($event->getDescription())
-                ->setLink($event->getLink())
-                ->save();;
-
-            $event->setYTLinker($ytlinker);
-        }
-
-        */
-            $model = $this->getYTLinker($event);
-
-            $this->createOrUpdate($event, $model);
+        $this->createOrUpdate($event, $model);
     }
 
     /**
@@ -102,7 +71,8 @@ class YTLinkerAction extends BaseAction implements EventSubscriberInterface
 
     protected function createOrUpdate($event, YTLinker $model)
     {
-        $connect = Propel::getConnection(YtlinkerI18nTableMap::DATABASE_NAME);
+        $temp       = new YTLinkerUtilities();
+        $connect    = Propel::getConnection(YtlinkerI18nTableMap::DATABASE_NAME);
         $connect->beginTransaction();
         try {
             if (null !== $locale = $event->getCurrentLocale()) {
@@ -115,7 +85,10 @@ class YTLinkerAction extends BaseAction implements EventSubscriberInterface
                 $model->setTitle($title);
             }
             if (null !== $link = $event->getLink()) {
-                $model->setLink($link);
+                if (($linkShortened = ($temp->getYoutubeId($link))) == false) {
+                    $linkShortened = $link;
+                }
+                $model->setLink($linkShortened);
             }
             if (null !== $description = $event->getDescription()) {
                 $model->setDescription($description);
