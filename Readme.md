@@ -1,5 +1,8 @@
 # YT Linker
 
+> This module is no longer maintained and will not be ported to Thelia 3. Its 2.x versions remain available on Packagist.
+> To embed a video in a product page, use the rich text editor shipped with Thelia 3.
+
 Allows you to add, modify and store Youtube video IDs in a list to be used with a video player in your site.
 
 ## Installation
